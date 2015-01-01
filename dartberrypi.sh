@@ -24,4 +24,36 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 # 
 
+DART_SVN_BRANCH="1.8"
 
+# The following functions are based upon the official Dart wiki on Google Code
+# found at https://code.google.com/p/dart/wiki/RaspberryPi
+function PreparingYourMachine {
+	# This script installs the dependencies required to build the Dart SDK
+	wget http://src.chromium.org/svn/trunk/src/build/install-build-deps.sh
+        chmod u+x install-build-deps.sh
+	./install-build-deps.sh --no-chromeos-fonts --arm
+
+	# Install depot tools
+	svn co http://src.chromium.org/svn/trunk/tools/depot_tools
+	export PATH=$PATH:`pwd`/depot_tools
+
+	# Install the default JDK
+	sudo apt-get -y install default-jdk
+
+	# Get Raspberry Pi cross compile build tools
+	git clone https://github.com/raspberrypi/tools rpi-tools
+}
+function GettingTheSource {
+	# Get the source code using depot tools
+	gclient config http://dart.googlecode.com/svn/branches/$DART_SVN_BRANCH/deps/all.deps
+	gclient sync
+}
+function DebianPackage {
+	./tools/create_tarball.py
+	./tools/create_debian_packages.py -a armhf -t ./rpi-tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf
+}
+
+PreparingYourMachine
+GettingTheSource
+DebianPackage
