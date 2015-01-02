@@ -33,7 +33,7 @@ function PreparingYourMachine {
 	# This script installs the dependencies required to build the Dart SDK
 	wget http://src.chromium.org/svn/trunk/src/build/install-build-deps.sh &>$LOG_FILE
         chmod u+x install-build-deps.sh &>$LOG_FILE
-	./install-build-deps.sh --no-chromeos-fonts --arm &>$LOG_FILE
+	./install-build-deps.sh --no-chromeos-fonts --arm --no-prompt &>$LOG_FILE
 
 	# Install depot tools
 	svn co http://src.chromium.org/svn/trunk/tools/depot_tools &>$LOG_FILE
