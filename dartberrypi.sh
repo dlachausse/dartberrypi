@@ -65,7 +65,7 @@ echo -e "\033[32m[Building Debian package...]\033[0m"
 DebianPackage
 
 # Lets make sure that a Debian package was created before we say "Success!!!"
-if [ -e "dart/out/dart_*_armhf.deb" ]
+if [ -e dart/out/dart_*_armhf.deb ]
 then
 	echo -e "\033[32m[Success!!!]\033[0m"
 	cp dart/out/dart_*_armhf.deb .
