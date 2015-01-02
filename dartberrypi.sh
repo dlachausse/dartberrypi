@@ -30,9 +30,8 @@ LOG_FILE="build.log"
 # The following functions are based upon the official Dart wiki on Google Code
 # found at https://code.google.com/p/dart/wiki/RaspberryPi
 function PreparingYourMachine {
-	# Install Microsoft TrueType core fonts first because they require
-	# manual intervention
-	sudo apt-get -y install ttf-mscorefonts-installer
+	# Accept the Microsoft Core Fonts EULA so we can keep the script silent
+	echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | sudo debconf-set-selections
 
 	# This script installs the dependencies required to build the Dart SDK
 	wget http://src.chromium.org/svn/trunk/src/build/install-build-deps.sh &>$LOG_FILE
