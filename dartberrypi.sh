@@ -32,7 +32,7 @@ LOG_FILE="build.log"
 function PreparingYourMachine {
 	# Install Microsoft TrueType core fonts first because they require
 	# manual intervention
-	apt-get install ttf-mscorefonts-installer
+	sudo apt-get install ttf-mscorefonts-installer
 
 	# This script installs the dependencies required to build the Dart SDK
 	wget http://src.chromium.org/svn/trunk/src/build/install-build-deps.sh &>$LOG_FILE
