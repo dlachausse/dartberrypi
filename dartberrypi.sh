@@ -50,8 +50,12 @@ function GettingTheSource {
 	gclient sync
 }
 function DebianPackage {
-	./tools/create_tarball.py
-	./tools/create_debian_packages.py -a armhf -t ./rpi-tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf
+	# Change to the dart directory, make an output directory, and build the
+	# package
+	(cd dart; \
+	mkdir out; \
+	./tools/create_tarball.py; \
+	./tools/create_debian_packages.py -a armhf -t ../rpi-tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf)
 }
 
 PreparingYourMachine
