@@ -57,6 +57,20 @@ function DebianPackage {
 	./tools/create_debian_packages.py -a armhf -t `pwd`/../rpi-tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf)
 }
 
-PreparingYourMachine
+echo -e "\033[32m[Preparing your machine...]\033[0m"
+PreparingYourMachine 
+echo -e "\033[32m[Getting Dart SDK source code...]\033[0m"
 GettingTheSource
+echo -e "\033[32m[Building Debian package...]\033[0m"
 DebianPackage
+
+# Lets make sure that a Debian package was created before we say "Success!!!"
+if [ -e "dart/out/dart_*_armhf.deb" ]
+then
+	echo -e "\033[32m[Success!!!]\033[0m"
+	cp dart/out/dart_*_armhf.deb .
+else
+	echo -e "\033[31m[Fail]\033[0m"
+	echo "Sorry, something went wrong"
+fi
+
