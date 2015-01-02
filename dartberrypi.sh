@@ -25,33 +25,28 @@
 # 
 
 DART_SVN_BRANCH="1.8"
-LOG_FILE="build.log"
 
 # The following functions are based upon the official Dart wiki on Google Code
 # found at https://code.google.com/p/dart/wiki/RaspberryPi
 function PreparingYourMachine {
-	# Ask the user to accept the Microsoft True Type Core fonts EULA up
-	# front so that the remainder of the script can run silently
-	sudo dpkg-preconfigure ttf-mscorefonts-installer
-
 	# This script installs the dependencies required to build the Dart SDK
-	wget http://src.chromium.org/svn/trunk/src/build/install-build-deps.sh &>$LOG_FILE
-        chmod u+x install-build-deps.sh >>$LOG_FILE 2>&1
-	./install-build-deps.sh --no-chromeos-fonts --arm --no-prompt >>$LOG_FILE 2>&1
+	wget http://src.chromium.org/svn/trunk/src/build/install-build-deps.sh
+        chmod u+x install-build-deps.sh
+	./install-build-deps.sh --no-chromeos-fonts --no-nacl --arm --no-prompt
 	# Install depot tools
-	svn co http://src.chromium.org/svn/trunk/tools/depot_tools >>$LOG_FILE 2>&1
-	export PATH=$PATH:`pwd`/depot_tools >>$LOG_FILE 2>&1
+	svn co http://src.chromium.org/svn/trunk/tools/depot_tools
+	export PATH=$PATH:`pwd`/depot_tools
 
 	# Install the default JDK
-	sudo apt-get -y install default-jdk >>$LOG_FILE 2>&1
+	sudo apt-get -y install default-jdk
 
 	# Get Raspberry Pi cross compile build tools
-	git clone https://github.com/raspberrypi/tools rpi-tools >>$LOG_FILE 2>&1
+	git clone https://github.com/raspberrypi/tools rpi-tools
 }
 function GettingTheSource {
 	# Get the source code using depot tools
-	gclient config http://dart.googlecode.com/svn/branches/$DART_SVN_BRANCH/deps/all.deps >>$LOG_FILE 2>&1
-	gclient sync >>$LOG_FILE 2>&1
+	gclient config http://dart.googlecode.com/svn/branches/$DART_SVN_BRANCH/deps/all.deps
+	gclient sync
 }
 function DebianPackage {
 	# Change to the dart directory, make an output directory, and build the
@@ -59,7 +54,7 @@ function DebianPackage {
 	(cd dart; \
 	mkdir out; \
 	./tools/create_tarball.py; \
-	./tools/create_debian_packages.py -a armhf -t `pwd`/../rpi-tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf) >>$LOG_FILE 2>&1
+	./tools/create_debian_packages.py -a armhf -t `pwd`/../rpi-tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf)
 }
 
 PreparingYourMachine
