@@ -35,23 +35,22 @@ function PreparingYourMachine {
 
 	# This script installs the dependencies required to build the Dart SDK
 	wget http://src.chromium.org/svn/trunk/src/build/install-build-deps.sh &>$LOG_FILE
-        chmod u+x install-build-deps.sh &>$LOG_FILE
-	./install-build-deps.sh --no-chromeos-fonts --arm --no-prompt &>$LOG_FILE
-
+        chmod u+x install-build-deps.sh >>$LOG_FILE 2>&1
+	./install-build-deps.sh --no-chromeos-fonts --arm --no-prompt >>$LOG_FILE 2>&1
 	# Install depot tools
-	svn co http://src.chromium.org/svn/trunk/tools/depot_tools &>$LOG_FILE
-	export PATH=$PATH:`pwd`/depot_tools &>$LOG_FILE
+	svn co http://src.chromium.org/svn/trunk/tools/depot_tools >>$LOG_FILE 2>&1
+	export PATH=$PATH:`pwd`/depot_tools >>$LOG_FILE 2>&1
 
 	# Install the default JDK
-	sudo apt-get -y install default-jdk &>$LOG_FILE
+	sudo apt-get -y install default-jdk >>$LOG_FILE 2>&1
 
 	# Get Raspberry Pi cross compile build tools
-	git clone https://github.com/raspberrypi/tools rpi-tools &>$LOG_FILE
+	git clone https://github.com/raspberrypi/tools rpi-tools >>$LOG_FILE 2>&1
 }
 function GettingTheSource {
 	# Get the source code using depot tools
-	gclient config http://dart.googlecode.com/svn/branches/$DART_SVN_BRANCH/deps/all.deps &>$LOG_FILE
-	gclient sync &>$LOG_FILE
+	gclient config http://dart.googlecode.com/svn/branches/$DART_SVN_BRANCH/deps/all.deps >>$LOG_FILE 2>&1
+	gclient sync >>$LOG_FILE 2>&1
 }
 function DebianPackage {
 	# Change to the dart directory, make an output directory, and build the
@@ -59,7 +58,7 @@ function DebianPackage {
 	(cd dart; \
 	mkdir out; \
 	./tools/create_tarball.py; \
-	./tools/create_debian_packages.py -a armhf -t `pwd`/../rpi-tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf) &>$LOG_FILE
+	./tools/create_debian_packages.py -a armhf -t `pwd`/../rpi-tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf) >>$LOG_FILE 2>&1
 }
 
 PreparingYourMachine
