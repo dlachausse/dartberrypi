@@ -55,7 +55,7 @@ function DebianPackage {
 	(cd dart; \
 	mkdir out; \
 	./tools/create_tarball.py; \
-	./tools/create_debian_packages.py -a armhf -t ../rpi-tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf)
+	./tools/create_debian_packages.py -a armhf -t `pwd`/../rpi-tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf)
 }
 
 PreparingYourMachine
