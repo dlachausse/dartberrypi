@@ -25,29 +25,30 @@
 # 
 
 DART_SVN_BRANCH="1.8"
+LOG_FILE="build.log"
 
 # The following functions are based upon the official Dart wiki on Google Code
 # found at https://code.google.com/p/dart/wiki/RaspberryPi
 function PreparingYourMachine {
 	# This script installs the dependencies required to build the Dart SDK
-	wget http://src.chromium.org/svn/trunk/src/build/install-build-deps.sh
-        chmod u+x install-build-deps.sh
-	./install-build-deps.sh --no-chromeos-fonts --arm
+	wget http://src.chromium.org/svn/trunk/src/build/install-build-deps.sh &>$LOG_FILE
+        chmod u+x install-build-deps.sh &>$LOG_FILE
+	./install-build-deps.sh --no-chromeos-fonts --arm &>$LOG_FILE
 
 	# Install depot tools
-	svn co http://src.chromium.org/svn/trunk/tools/depot_tools
-	export PATH=$PATH:`pwd`/depot_tools
+	svn co http://src.chromium.org/svn/trunk/tools/depot_tools &>$LOG_FILE
+	export PATH=$PATH:`pwd`/depot_tools &>$LOG_FILE
 
 	# Install the default JDK
-	sudo apt-get -y install default-jdk
+	sudo apt-get -y install default-jdk &>$LOG_FILE
 
 	# Get Raspberry Pi cross compile build tools
-	git clone https://github.com/raspberrypi/tools rpi-tools
+	git clone https://github.com/raspberrypi/tools rpi-tools &>$LOG_FILE
 }
 function GettingTheSource {
 	# Get the source code using depot tools
-	gclient config http://dart.googlecode.com/svn/branches/$DART_SVN_BRANCH/deps/all.deps
-	gclient sync
+	gclient config http://dart.googlecode.com/svn/branches/$DART_SVN_BRANCH/deps/all.deps &>$LOG_FILE
+	gclient sync &>$LOG_FILE
 }
 function DebianPackage {
 	# Change to the dart directory, make an output directory, and build the
@@ -55,7 +56,7 @@ function DebianPackage {
 	(cd dart; \
 	mkdir out; \
 	./tools/create_tarball.py; \
-	./tools/create_debian_packages.py -a armhf -t `pwd`/../rpi-tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf)
+	./tools/create_debian_packages.py -a armhf -t `pwd`/../rpi-tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf) &>$LOG_FILE
 }
 
 PreparingYourMachine
