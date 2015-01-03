@@ -57,12 +57,23 @@ function DebianPackage {
 	./tools/create_debian_packages.py -a armhf -t `pwd`/../rpi-tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf)
 }
 
+function RaspbianDepsFix {
+	# Fix dependencies in the generated package for Raspbian to prevent
+	# warnings about requiring a newer version of libc6
+	dpkg-deb -x dart/out/dart_*_armhf.deb dart/out/dartsdk
+	dpkg-deb --control dart/out/dart_*_armhf.deb dart/out/dartsdk/DEBIAN
+	sed -i 's/ (>= *.*)//' dart/out/dartsdk/DEBIAN/control
+	dpkg -b dart/out/dartsdk dart/out/dart_*_armhf.deb
+}
+
 echo -e "\033[32m[Preparing your machine...]\033[0m"
 PreparingYourMachine 
 echo -e "\033[32m[Getting Dart SDK source code...]\033[0m"
 GettingTheSource
 echo -e "\033[32m[Building Debian package...]\033[0m"
 DebianPackage
+echo -e "\033[32m[Fixing dependencies for Raspbian...]\033[0m"
+RaspbianDepsFix
 
 # Lets make sure that a Debian package was created before we say "Success!!!"
 if [ -e dart/out/dart_*_armhf.deb ]
