@@ -92,7 +92,7 @@ function CheckSuccess {
 }
 
 # Parse the command line args
-while getopts :r:h FLAG; do
+while getopts :b:h FLAG; do
 	case $FLAG in
 		b)
 			DART_SVN_BRANCH=$OPTARG
