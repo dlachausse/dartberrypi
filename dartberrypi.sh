@@ -26,6 +26,19 @@
 
 DART_SVN_BRANCH="1.8"
 
+# Display a terse help message
+function DisplayHelp {
+	echo
+	echo "Usage:"
+	echo -e "\t./dartberrypi.sh [OPTIONS]"
+	echo
+	echo "Options:"
+	echo -e "\t-b BRANCH\tBuild the specified subversion BRANCH"
+	echo -e "\t-h\t\tDisplay this help message"
+	echo
+	exit 1
+}
+
 # The following functions are based upon the official Dart wiki on Google Code
 # found at https://code.google.com/p/dart/wiki/RaspberryPi
 function PreparingYourMachine {
@@ -78,7 +91,24 @@ function CheckSuccess {
 	fi
 }
 
-ParseArgs
+# Parse the command line args
+while getopts :r:h FLAG; do
+	case $FLAG in
+		b)
+			DART_SVN_BRANCH=$OPTARG
+			;;
+		h)
+			DisplayHelp
+			;;
+		\?)
+			echo -e "ERROR: Unrecognized option"
+			DisplayHelp
+			;;
+	esac
+done
+
+
+echo -e "\033[1m[Building Dart SDK Raspbian package from the $DART_SVN_BRANCH subversion branch...]\033[0m"
 echo -e "\033[32m[Preparing your machine...]\033[0m"
 PreparingYourMachine 
 echo -e "\033[32m[Getting Dart SDK source code...]\033[0m"
