@@ -65,7 +65,20 @@ function RaspbianDepsFix {
 	sed -i 's/ (>= *.*)//' dart/out/dartsdk/DEBIAN/control
 	dpkg -b dart/out/dartsdk dart/out/dart_*_armhf.deb
 }
+function CheckSuccess {
+	# Lets make sure that a Debian package was created before we say 
+	# "Success!!!"
+	if [ -e dart/out/dart_*_armhf.deb ]
+	then
+		echo -e "\033[32m[Success!!!]\033[0m"
+		cp dart/out/dart_*_armhf.deb .
+	else
+		echo -e "\033[31m[Fail]\033[0m"
+		echo "Sorry, something went wrong"
+	fi
+}
 
+ParseArgs
 echo -e "\033[32m[Preparing your machine...]\033[0m"
 PreparingYourMachine 
 echo -e "\033[32m[Getting Dart SDK source code...]\033[0m"
@@ -74,14 +87,5 @@ echo -e "\033[32m[Building Debian package...]\033[0m"
 DebianPackage
 echo -e "\033[32m[Fixing dependencies for Raspbian...]\033[0m"
 RaspbianDepsFix
-
-# Lets make sure that a Debian package was created before we say "Success!!!"
-if [ -e dart/out/dart_*_armhf.deb ]
-then
-	echo -e "\033[32m[Success!!!]\033[0m"
-	cp dart/out/dart_*_armhf.deb .
-else
-	echo -e "\033[31m[Fail]\033[0m"
-	echo "Sorry, something went wrong"
-fi
+CheckSuccess
 
